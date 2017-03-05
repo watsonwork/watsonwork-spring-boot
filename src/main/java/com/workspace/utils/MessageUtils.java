@@ -5,6 +5,8 @@ import java.util.Collections;
 import com.workspace.model.Annotation;
 import com.workspace.model.Message;
 
+import static com.workspace.MessageTypes.APP_MESSAGE;
+
 public class MessageUtils {
 
     public static Message buildMessage(String messageTitle, String messageText) {
@@ -22,7 +24,7 @@ public class MessageUtils {
 //        annotation.setActor(actor);
 
         Message message = new Message();
-        message.setType("appMessage");
+        message.setType(APP_MESSAGE);
         message.setVersion(1.0);
         message.setAnnotations(Collections.singletonList(annotation));
 
