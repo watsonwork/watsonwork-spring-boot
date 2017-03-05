@@ -1,0 +1,25 @@
+info:
+    app:
+       name: {build.app.name}
+       group: {build.app.group}
+       description: {build.app.description}
+       version: {build.app.version}
+       buildtime: {build.app.buildtime}
+
+spring:
+        application:
+             name: {build.app.name}
+
+server:
+        port: ${HTTP_PORT:9080}
+        tomcat:
+             uri-encoding: ${URI_ENCODING:UTF-8}
+
+workspace:
+        webhook:
+            secret: ${WEBHOOK_SECRET:of7bs9evq4lnbi9slg0qq2k7z6nsfk7y}
+        app:
+            id: ${APP_ID:c79e3474-e963-4024-aa47-4a1087903381}
+            secret: ${APP_SECRET:javltqgjfvjh2d99zj5bjdfr0q4x5lw3}
+        api:
+            uri: ${WORKSPACE_URI:https://api.watsonwork.ibm.com}

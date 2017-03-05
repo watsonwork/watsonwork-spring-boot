@@ -1,10 +1,12 @@
-package com.workspace;
+package com.workspace.integration;
 
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.workspace.ApplicationBootstrap;
+import com.workspace.WorkspaceConstants;
+import com.workspace.WorkspaceProperties;
 import com.workspace.client.AuthClient;
 import com.workspace.client.WorkspaceClient;
 import com.workspace.model.Message;
@@ -22,9 +24,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.mock.Calls;
+
+import static com.workspace.utils.Utils.prepareSHA256Hash;
 
 @Ignore
 @RunWith(SpringRunner.class)
@@ -37,6 +39,9 @@ public class BaseWorkspaceApplicationTests {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @Autowired
+    protected WorkspaceProperties workspaceProperties;
 
     static class MockAuthService implements AuthClient {
 
@@ -71,24 +76,12 @@ public class BaseWorkspaceApplicationTests {
     @Configuration
     public static class IntegrationConfigurationBootTest {
 
-        private ObjectMapper objectMapper = new ObjectMapper();
-
+        @Primary
         @Bean
         public OkHttpClient okHttpClient() {
             return new OkHttpClient.Builder()
                     .readTimeout(60, TimeUnit.SECONDS)
                     .connectTimeout(60, TimeUnit.SECONDS)
-                    .build();
-        }
-
-        @Primary
-        @Bean
-        public Retrofit retrofit(OkHttpClient client) {
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            return new Retrofit.Builder()
-                    .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-                    .baseUrl("http://localhost")
-                    .client(client)
                     .build();
         }
 
@@ -108,8 +101,9 @@ public class BaseWorkspaceApplicationTests {
     public TestRestTemplate getTestRestTemplate() {
         restTemplate.getRestTemplate().setInterceptors(
                     Collections.singletonList((request, body, execution) -> {
+                        String hmacSha256Hex = prepareSHA256Hash(workspaceProperties.getWebhookSecret(), body);
                         request.getHeaders()
-                                .add("X-OUTBOUND-TOKEN", "out-bound-token");
+                                .add(WorkspaceConstants.X_OUTBOUND_TOKEN, hmacSha256Hex);
                         return execution.execute(request, body);
                     }));
         return restTemplate;

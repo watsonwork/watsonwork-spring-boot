@@ -1,17 +1,19 @@
-package com.workspace;
+package com.workspace.integration;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.workspace.model.VerificationRequest;
 import com.workspace.model.WebhookEvent;
+import com.workspace.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
 
+import static com.workspace.MessageTypes.VERIFICATION;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
@@ -29,31 +31,20 @@ public class WorkspaceApplicationTests extends BaseWorkspaceApplicationTests {
 
     @Test
     public void postingVerificationEventReturnsVerificationResponse() throws IOException {
-        WebhookEvent webhookEvent = new WebhookEvent();
-        webhookEvent.setType(WorkspaceConstants.VERIFICATION);
-        webhookEvent.setChallenge("j2m0dj7f4offx989gvm4pg8zpt83qqsm");
+        VerificationRequest verificationRequest = new VerificationRequest(VERIFICATION, Utils.generateSecret());
 
-        restTemplate.getRestTemplate().setInterceptors(
-                Collections.singletonList((request, body, execution) -> {
-                    request.getHeaders()
-                            .add("X-OUTBOUND-TOKEN", "f18d241715d8e257062d8b7956a3563aa591dfd32c127cebc10b73336ec87025");
-                    return execution.execute(request, body);
-                }));
-
-        ResponseEntity<JsonNode> responseEntity = restTemplate.postForEntity("/webhook", webhookEvent, JsonNode.class);
+        ResponseEntity<JsonNode> responseEntity = getTestRestTemplate().postForEntity("/webhook", verificationRequest, JsonNode.class);
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
         JsonNode jsonNode = getObjectMapper().readTree(responseEntity.getBody().toString());
         assertTrue(jsonNode.has("response"));
-        assertThat(jsonNode.get("response").asText(), IsEqual.equalTo(webhookEvent.getChallenge()));
+        assertThat(jsonNode.get("response").asText(), IsEqual.equalTo(verificationRequest.getChallenge()));
     }
 
     @Test
     public void postingInvalidVerificationEventReturns200WithNoBody() throws IOException {
-        WebhookEvent webhookEvent = new WebhookEvent();
-        webhookEvent.setType(WorkspaceConstants.VERIFICATION);
-        webhookEvent.setChallenge("j2m0dj7f4offx989gvm4pg8zpt83qqsm");
+        VerificationRequest verificationRequest = new VerificationRequest(VERIFICATION, Utils.generateSecret());
 
-        ResponseEntity<JsonNode> responseEntity = getTestRestTemplate().postForEntity("/webhook", webhookEvent, JsonNode.class);
+        ResponseEntity<JsonNode> responseEntity = getTestRestTemplate().postForEntity("/webhook", verificationRequest, JsonNode.class);
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
         assertNull(responseEntity.getBody());
     }
