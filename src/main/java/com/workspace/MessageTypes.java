@@ -14,12 +14,12 @@ public class MessageTypes {
 
 
     // Webhook annotation types
-    public final String GENERIC_ANNOTATION = "generic";
-    public final String MENTION_ANNOTATION = "mention";
-    public final String MOMENT_ANNOTATION = "conversation-moment";
-    public final String FOCUS_ANNOTATION = "message-focus";
+    public static final String GENERIC_ANNOTATION = "generic";
+    public static final String MENTION_ANNOTATION = "mention";
+    public static final String MOMENT_ANNOTATION = "conversation-moment";
+    public static final String FOCUS_ANNOTATION = "message-focus";
 
     // Inbound webhook message type
-    public final String APP_MESSAGE = "appMessage";
+    public static final String APP_MESSAGE = "appMessage";
 
 }
