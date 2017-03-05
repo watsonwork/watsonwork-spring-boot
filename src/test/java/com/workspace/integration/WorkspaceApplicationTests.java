@@ -42,7 +42,7 @@ public class WorkspaceApplicationTests extends BaseWorkspaceApplicationTests {
 
     @Test
     public void postingInvalidVerificationEventReturns200WithNoBody() throws IOException {
-        VerificationRequest verificationRequest = new VerificationRequest(VERIFICATION, Utils.generateSecret());
+        VerificationRequest verificationRequest = new VerificationRequest(VERIFICATION, null);
 
         ResponseEntity<JsonNode> responseEntity = getTestRestTemplate().postForEntity("/webhook", verificationRequest, JsonNode.class);
         assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
