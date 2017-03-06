@@ -1,12 +1,9 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.2.RELEASE'
-	}
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${SPRING_BOOT_VERSION}")
 	}
 }
 
@@ -32,14 +29,14 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-web")
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.6'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.8.6'
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-	compile group: 'commons-io', name: 'commons-io', version: '2.5'
-	compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
-	compile group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.2.0'
-	compile group: 'com.squareup.retrofit2', name: 'converter-jackson', version: '2.2.0'
-	testCompile group: 'com.squareup.retrofit2', name: 'retrofit-mock', version: '2.2.0'
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "${LIB_JACKSON_VERSION}"
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: "${LIB_JACKSON_VERSION}"
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: "${LIB_APACHE_COMMONS}"
+	compile group: 'commons-io', name: 'commons-io', version: "${LIB_COMMONS_IO}"
+	compile group: 'commons-codec', name: 'commons-codec', version: "${LIB_COMMONS_CODEC}"
+	compile group: 'com.squareup.retrofit2', name: 'retrofit', version: "${LIB_RETROFIT2_VERSION}"
+	compile group: 'com.squareup.retrofit2', name: 'converter-jackson', version: "${LIB_RETROFIT2_VERSION}"
+	testCompile group: 'com.squareup.retrofit2', name: 'retrofit-mock', version: "${LIB_RETROFIT2_VERSION}"
 	testCompileOnly('org.projectlombok:lombok')
 
 
