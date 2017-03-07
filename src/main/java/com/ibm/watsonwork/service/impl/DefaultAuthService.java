@@ -3,8 +3,8 @@ package com.ibm.watsonwork.service.impl;
 import java.util.Base64;
 import java.util.Date;
 
-import com.ibm.watsonwork.WorkspaceConstants;
-import com.ibm.watsonwork.WorkspaceProperties;
+import com.ibm.watsonwork.WatsonWorkConstants;
+import com.ibm.watsonwork.WatsonWorkProperties;
 import com.ibm.watsonwork.model.TokenResponse;
 import com.ibm.watsonwork.model.WebhookEvent;
 import com.ibm.watsonwork.service.AuthService;
@@ -24,7 +24,7 @@ public class DefaultAuthService implements AuthService {
     private Date appTokenExpireTime;
 
     @Autowired
-    private WorkspaceProperties workspaceProperties;
+    private WatsonWorkProperties watsonWorkProperties;
 
     @Autowired
     private AuthClient authClient;
@@ -34,29 +34,29 @@ public class DefaultAuthService implements AuthService {
         //if we never got the token or if the token is expired, set it
         if (appTokenExpireTime == null || appTokenExpireTime.before(new Date())) {
             try {
-                TokenResponse tokenResponse = authClient.authenticateApp(createAppAuthHeader(), WorkspaceConstants.CLIENT_CREDENTIALS).execute().body();
+                TokenResponse tokenResponse = authClient.authenticateApp(createAppAuthHeader(), WatsonWorkConstants.CLIENT_CREDENTIALS).execute().body();
                 appTokenExpireTime = getDate(tokenResponse.getExpiresIn());
                 appToken = tokenResponse.getAccessToken();
             } catch (Exception e) {
                 LOGGER.error(e.getMessage());
             }
         }
-        return WorkspaceConstants.BEARER + appToken;
+        return WatsonWorkConstants.BEARER + appToken;
     }
 
     @Override
     public String getAppId() {
-        return workspaceProperties.getAppId();
+        return watsonWorkProperties.getAppId();
     }
 
     @Override
     public String getAppSecret() {
-        return workspaceProperties.getAppSecret();
+        return watsonWorkProperties.getAppSecret();
     }
 
     @Override
     public String getWebhookSecret() {
-        return workspaceProperties.getWebhookSecret();
+        return watsonWorkProperties.getWebhookSecret();
     }
 
     @Override
@@ -77,6 +77,6 @@ public class DefaultAuthService implements AuthService {
     }
 
     private String createAppAuthHeader() {
-        return WorkspaceConstants.BASIC + Base64.getEncoder().encodeToString((getAppId() + ":" + getAppSecret()).getBytes());
+        return WatsonWorkConstants.BASIC + Base64.getEncoder().encodeToString((getAppId() + ":" + getAppSecret()).getBytes());
     }
 }

@@ -8,7 +8,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-public interface WorkspaceClient {
+public interface WatsonWorkClient {
 
     @Headers({"Content-Type: application/json"})
     @POST("/v1/spaces/{spaceId}/messages")

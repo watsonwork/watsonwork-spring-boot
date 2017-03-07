@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties
-public class WorkspaceProperties {
+public class WatsonWorkProperties {
 
-    @Value("${workspace.webhook.secret}")
+    @Value("${watsonwork.webhook.secret}")
     private String webhookSecret;
 
-    @Value("${workspace.app.id}")
+    @Value("${watsonwork.app.id}")
     private String appId;
 
-    @Value("${workspace.app.secret}")
+    @Value("${watsonwork.app.secret}")
     private String appSecret;
 
-    @Value("${workspace.api.uri}")
+    @Value("${watsonwork.api.uri}")
     private String apiUri;
 }
