@@ -2,7 +2,7 @@ package com.ibm.watsonwork;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ibm.watsonwork.client.WorkspaceClient;
+import com.ibm.watsonwork.client.WatsonWorkClient;
 import com.ibm.watsonwork.client.AuthClient;
 import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +12,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Configuration
-public class WorkspaceConfiguration {
+public class WatsonWorkConfiguration {
 
     @Autowired
-    private WorkspaceProperties workspaceProperties;
+    private WatsonWorkProperties watsonWorkProperties;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -30,14 +30,14 @@ public class WorkspaceConfiguration {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return new Retrofit.Builder()
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-                .baseUrl(workspaceProperties.getApiUri())
+                .baseUrl(watsonWorkProperties.getApiUri())
                 .client(client)
                 .build();
     }
 
     @Bean
-    public WorkspaceClient workspaceClient(Retrofit retrofit) {
-        return retrofit.create(WorkspaceClient.class);
+    public WatsonWorkClient watsonWorkClient(Retrofit retrofit) {
+        return retrofit.create(WatsonWorkClient.class);
     }
 
     @Bean

@@ -18,7 +18,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
 
-public class WorkspaceApplicationTests extends BaseWorkspaceApplicationTests {
+public class WatsonWorkApplicationTests extends BaseWatsonWorkApplicationTests {
 
     @Test
     public void postingWebhookEventReturns200() throws IOException {

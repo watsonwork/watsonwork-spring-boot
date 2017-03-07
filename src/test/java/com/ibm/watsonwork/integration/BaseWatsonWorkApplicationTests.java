@@ -5,11 +5,11 @@ import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.watsonwork.ApplicationBootstrap;
-import com.ibm.watsonwork.WorkspaceConstants;
-import com.ibm.watsonwork.WorkspaceProperties;
+import com.ibm.watsonwork.WatsonWorkConstants;
+import com.ibm.watsonwork.WatsonWorkProperties;
 import com.ibm.watsonwork.model.OauthResponse;
 import com.ibm.watsonwork.client.AuthClient;
-import com.ibm.watsonwork.client.WorkspaceClient;
+import com.ibm.watsonwork.client.WatsonWorkClient;
 import com.ibm.watsonwork.model.Message;
 import com.ibm.watsonwork.model.TokenResponse;
 import okhttp3.OkHttpClient;
@@ -30,9 +30,9 @@ import static com.ibm.watsonwork.utils.Utils.prepareSHA256Hash;
 
 @Ignore
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ApplicationBootstrap.class, BaseWorkspaceApplicationTests.IntegrationConfigurationBootTest.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {ApplicationBootstrap.class, BaseWatsonWorkApplicationTests.IntegrationConfigurationBootTest.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations = "classpath:application.properties")
-public class BaseWorkspaceApplicationTests {
+public class BaseWatsonWorkApplicationTests {
 
     @Autowired
     protected TestRestTemplate restTemplate;
@@ -41,7 +41,7 @@ public class BaseWorkspaceApplicationTests {
     protected ObjectMapper objectMapper;
 
     @Autowired
-    protected WorkspaceProperties workspaceProperties;
+    protected WatsonWorkProperties watsonWorkProperties;
 
     static class MockAuthService implements AuthClient {
 
@@ -63,7 +63,7 @@ public class BaseWorkspaceApplicationTests {
         }
     }
 
-    static class MockWorkspaceClient implements WorkspaceClient {
+    static class MockWatsonWorkClient implements WatsonWorkClient {
 
         @Override
         public Call<Message> createMessage(String authToken, String spaceId, Message message) {
@@ -93,17 +93,17 @@ public class BaseWorkspaceApplicationTests {
 
         @Primary
         @Bean
-        public WorkspaceClient workspaceClient() {
-            return new MockWorkspaceClient();
+        public WatsonWorkClient watsonWorkClient() {
+            return new MockWatsonWorkClient();
         }
     }
 
     public TestRestTemplate getTestRestTemplate() {
         restTemplate.getRestTemplate().setInterceptors(
                     Collections.singletonList((request, body, execution) -> {
-                        String hmacSha256Hex = prepareSHA256Hash(workspaceProperties.getWebhookSecret(), body);
+                        String hmacSha256Hex = prepareSHA256Hash(watsonWorkProperties.getWebhookSecret(), body);
                         request.getHeaders()
-                                .add(WorkspaceConstants.X_OUTBOUND_TOKEN, hmacSha256Hex);
+                                .add(WatsonWorkConstants.X_OUTBOUND_TOKEN, hmacSha256Hex);
                         return execution.execute(request, body);
                     }));
         return restTemplate;

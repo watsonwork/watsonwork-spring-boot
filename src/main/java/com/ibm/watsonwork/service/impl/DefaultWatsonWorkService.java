@@ -1,9 +1,9 @@
 package com.ibm.watsonwork.service.impl;
 
-import com.ibm.watsonwork.client.WorkspaceClient;
+import com.ibm.watsonwork.client.WatsonWorkClient;
 import com.ibm.watsonwork.model.Message;
 import com.ibm.watsonwork.service.AuthService;
-import com.ibm.watsonwork.service.WorkspaceService;
+import com.ibm.watsonwork.service.WatsonWorkService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,19 +13,19 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @Service
-public class DefaultWorkspaceService implements WorkspaceService {
+public class DefaultWatsonWorkService implements WatsonWorkService {
 
-    protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultWorkspaceService.class);
+    protected static final Logger LOGGER = LoggerFactory.getLogger(DefaultWatsonWorkService.class);
 
     @Autowired
     private AuthService authService;
 
     @Autowired
-    private WorkspaceClient workspaceClient;
+    private WatsonWorkClient watsonWorkClient;
 
     @Override
     public void createMessage(String spaceId, Message message) {
-        Call<Message> call = workspaceClient.createMessage(authService.getAppAuthToken(), spaceId, message);
+        Call<Message> call = watsonWorkClient.createMessage(authService.getAppAuthToken(), spaceId, message);
 
         call.enqueue(new Callback<Message>() {
             @Override

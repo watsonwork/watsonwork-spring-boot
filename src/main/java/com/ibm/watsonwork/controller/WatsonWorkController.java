@@ -1,9 +1,9 @@
 package com.ibm.watsonwork.controller;
 
-import com.ibm.watsonwork.WorkspaceProperties;
+import com.ibm.watsonwork.WatsonWorkProperties;
 import com.ibm.watsonwork.model.WebhookEvent;
 import com.ibm.watsonwork.service.AuthService;
-import com.ibm.watsonwork.service.WorkspaceService;
+import com.ibm.watsonwork.service.WatsonWorkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.ibm.watsonwork.MessageTypes.VERIFICATION;
-import static com.ibm.watsonwork.WorkspaceConstants.X_OUTBOUND_TOKEN;
+import static com.ibm.watsonwork.WatsonWorkConstants.X_OUTBOUND_TOKEN;
 import static com.ibm.watsonwork.utils.MessageUtils.buildMessage;
 
 @RestController
-public class WorkspaceController {
+public class WatsonWorkController {
 
     @Autowired
-    private WorkspaceProperties workspaceProperties;
+    private WatsonWorkProperties watsonWorkProperties;
 
     @Autowired
-    private WorkspaceService workspaceService;
+    private WatsonWorkService watsonWorkService;
 
     @Autowired
     private AuthService authService;
@@ -41,9 +41,9 @@ public class WorkspaceController {
             return buildVerificationResponse(webhookEvent);
         }
 
-        if(!workspaceProperties.getAppId().equals(webhookEvent.getUserId())) {
+        if(!watsonWorkProperties.getAppId().equals(webhookEvent.getUserId())) {
             // respond to webhook
-            workspaceService.createMessage(webhookEvent.getSpaceId(), buildMessage("Echo App", webhookEvent.getContent()));
+            watsonWorkService.createMessage(webhookEvent.getSpaceId(), buildMessage("Echo App", webhookEvent.getContent()));
         }
         return ResponseEntity.ok().build();
     }
