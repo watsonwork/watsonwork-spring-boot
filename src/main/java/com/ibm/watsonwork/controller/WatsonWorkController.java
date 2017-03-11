@@ -1,13 +1,19 @@
 package com.ibm.watsonwork.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import com.ibm.watsonwork.WatsonWorkProperties;
 import com.ibm.watsonwork.model.WebhookEvent;
 import com.ibm.watsonwork.service.AuthService;
 import com.ibm.watsonwork.service.WatsonWorkService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +26,8 @@ import static com.ibm.watsonwork.utils.MessageUtils.buildMessage;
 
 @RestController
 public class WatsonWorkController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WatsonWorkController.class);
 
     @Autowired
     private WatsonWorkProperties watsonWorkProperties;
@@ -42,8 +50,20 @@ public class WatsonWorkController {
         }
 
         if(!watsonWorkProperties.getAppId().equals(webhookEvent.getUserId())) {
-            // respond to webhook
+            /* respond to webhook */
+
+            // send an echo message
             watsonWorkService.createMessage(webhookEvent.getSpaceId(), buildMessage("Echo App", webhookEvent.getContent()));
+
+            // upload a sample file/image
+            // Remove the following block of code if you do not want to share a file on every echo message. This is just an example.
+            File file = null;
+            try {
+                file = ResourceUtils.getFile("classpath:watson-work.jpg");
+            } catch (FileNotFoundException e) {
+                LOGGER.error("File not found.", e);
+            }
+            watsonWorkService.shareFile(webhookEvent.getSpaceId(), file, "256x256");
         }
         return ResponseEntity.ok().build();
     }
