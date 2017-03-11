@@ -7,11 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.watsonwork.ApplicationBootstrap;
 import com.ibm.watsonwork.WatsonWorkConstants;
 import com.ibm.watsonwork.WatsonWorkProperties;
+import com.ibm.watsonwork.model.FileShareResponse;
 import com.ibm.watsonwork.model.OauthResponse;
 import com.ibm.watsonwork.client.AuthClient;
 import com.ibm.watsonwork.client.WatsonWorkClient;
 import com.ibm.watsonwork.model.Message;
 import com.ibm.watsonwork.model.TokenResponse;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
@@ -70,6 +72,13 @@ public class BaseWatsonWorkApplicationTests {
             Message successValue = new Message();
             successValue.setId("12345");
             return Calls.response(successValue);
+        }
+
+        @Override
+        public Call<FileShareResponse> shareFile(String authToken, String spaceId, MultipartBody.Part file, String dim) {
+            FileShareResponse fileShareResponse = new FileShareResponse();
+            fileShareResponse.setId("ibm0@default@58bc361ce4b0e5077b0d921f@file-fa9a1237-2857-4b9f-9cc1-1a3abe21a2d9");
+            return Calls.response(fileShareResponse);
         }
     }
 

@@ -21,5 +21,6 @@ public class MessageTypes {
 
     // Inbound webhook message type
     public static final String APP_MESSAGE = "appMessage";
+    public static final String FORM_DATA_FILE = "file";
 
 }
