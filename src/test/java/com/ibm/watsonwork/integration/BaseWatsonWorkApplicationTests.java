@@ -13,8 +13,11 @@ import com.ibm.watsonwork.client.AuthClient;
 import com.ibm.watsonwork.client.WatsonWorkClient;
 import com.ibm.watsonwork.model.Message;
 import com.ibm.watsonwork.model.TokenResponse;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +82,11 @@ public class BaseWatsonWorkApplicationTests {
             FileShareResponse fileShareResponse = new FileShareResponse();
             fileShareResponse.setId("ibm0@default@58bc361ce4b0e5077b0d921f@file-fa9a1237-2857-4b9f-9cc1-1a3abe21a2d9");
             return Calls.response(fileShareResponse);
+        }
+
+        @Override
+        public Call<ResponseBody> uploadAppPhoto(String authToken, MultipartBody.Part file) {
+            return Calls.response(ResponseBody.create(MediaType.parse(org.springframework.http.MediaType.APPLICATION_JSON_VALUE), StringUtils.EMPTY));
         }
     }
 

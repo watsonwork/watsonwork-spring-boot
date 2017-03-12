@@ -7,6 +7,7 @@ import com.ibm.watsonwork.WatsonWorkProperties;
 import com.ibm.watsonwork.model.WebhookEvent;
 import com.ibm.watsonwork.service.AuthService;
 import com.ibm.watsonwork.service.WatsonWorkService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class WatsonWorkController {
             return buildVerificationResponse(webhookEvent);
         }
 
-        if(!watsonWorkProperties.getAppId().equals(webhookEvent.getUserId())) {
+        if(StringUtils.isNotEmpty(webhookEvent.getUserId()) && !StringUtils.equals(watsonWorkProperties.getAppId(), webhookEvent.getUserId())) {
             /* respond to webhook */
 
             // send an echo message

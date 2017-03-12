@@ -10,6 +10,13 @@ to receive and send messages via Webhook API.
 The main purpose of this project is to provide third party app developers to be able to hook in their app logic without
 worrying about writing your own implementation from scratch. 
 
+# API Supported by the app
+- create message in a space
+- set app photo
+    - By default the app looks for a file named `app-photo.jpg` in `src/main/reources` directory. The photo will be uploaded
+    one the app start by using the [@PostConstruct](http://docs.oracle.com/javaee/7/api/javax/annotation/PostConstruct.html) annotation
+- upload file to a space
+
 
 ## Getting Started
 
