@@ -3,6 +3,7 @@ package com.ibm.watsonwork.client;
 import com.ibm.watsonwork.model.FileShareResponse;
 import com.ibm.watsonwork.model.Message;
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
@@ -23,8 +24,12 @@ public interface WatsonWorkClient {
 
     @Multipart
     @POST("/v1/spaces/{spaceId}/files")
-
     Call<FileShareResponse> shareFile(@Header("Authorization") String authToken,
                                       @Path("spaceId") String spaceId, @Part MultipartBody.Part file,
                                       @Query(value = "dim") String dim);
+
+    @Multipart
+    @POST("/photos/")
+    Call<ResponseBody> uploadAppPhoto(@Header("Authorization") String authToken,
+                                      @Part MultipartBody.Part file);
 }
