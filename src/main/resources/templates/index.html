@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Hello</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet"> </link>
+    <link href="/css/custom.css" rel="stylesheet"> </link>
+
+</head>
+<body>
+<div class="container-full">
+    <div class="row">
+        <div class="col-lg-12 text-center v-center">
+            <h1>Authorize Application</h1>
+            <p class="lead">Press the button below to authorize the application to act on your behalf.</p>
+            <br></br>
+            <form class="col-lg-12">
+                <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+                      <span class="input-group-btn">
+                          <a th:href="@{${watsonworkAuthUri}(response_type=${responseType}, client_id=${clientId}, redirect_uri=${redirectUri}, state=${state})}"
+                                                            class="btn btn-primary btn-lg" type="button">Authorize application
+                          </a>
+                      </span>
+                </div>
+            </form>
+        </div>
+
+    </div> <!-- /row -->
+</div> <!-- /container full -->
+
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/scripts.js"></script>
+</body>
+</html>
