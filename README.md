@@ -16,6 +16,7 @@ worrying about writing your own implementation from scratch.
     - By default the app looks for a file named `app-photo.jpg` in `src/main/reources` directory. The photo will be uploaded
     one the app start by using the [@PostConstruct](http://docs.oracle.com/javaee/7/api/javax/annotation/PostConstruct.html) annotation
 - upload file to a space
+- authorize the application to act on behalf of a user
 
 
 ## Getting Started
