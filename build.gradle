@@ -27,6 +27,7 @@ repositories {
 dependencies {
 //	compile('org.springframework.boot:spring-boot-starter-data-mongodb')
 	compile("org.springframework.boot:spring-boot-starter-web")
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: "${LIB_JACKSON_VERSION}"

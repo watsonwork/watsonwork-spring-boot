@@ -1,5 +1,6 @@
 package com.ibm.watsonwork.service;
 
+import com.ibm.watsonwork.model.OauthResponse;
 import com.ibm.watsonwork.model.WebhookEvent;
 
 public interface AuthService extends Service {
@@ -14,5 +15,11 @@ public interface AuthService extends Service {
 
     String createVerificationHeader(String responseBody);
 
+    OauthResponse exchangeCodeForToken(String code, String redirectUri);
+
     boolean isValidVerificationRequest(WebhookEvent webhookEvent, String outBoundToken);
+
+    OauthResponse getUserOAuthResponse(String id);
+
+
 }

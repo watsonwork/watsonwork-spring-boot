@@ -23,3 +23,4 @@ watsonwork:
             secret: ${APP_SECRET:javltqgjfvjh2d99zj5bjdfr0q4x5lw3}
         api:
             uri: ${WATSON_WORK_API_URI:https://api.watsonwork.ibm.com}
+            oauth: ${WATSON_WORK_OAUTH:/oauth/authorize}

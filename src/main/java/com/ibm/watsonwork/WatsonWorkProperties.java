@@ -21,4 +21,7 @@ public class WatsonWorkProperties {
 
     @Value("${watsonwork.api.uri}")
     private String apiUri;
+
+    @Value("${watsonwork.api.uri}" + "${watsonwork.api.oauth}")
+    private String oauthApi;
 }
