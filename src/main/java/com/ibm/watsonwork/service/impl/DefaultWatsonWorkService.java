@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 import retrofit2.Call;
@@ -29,6 +30,7 @@ import retrofit2.Response;
 import static com.ibm.watsonwork.MessageTypes.FORM_DATA_FILE;
 
 @Service
+@EnableAsync
 public class DefaultWatsonWorkService implements WatsonWorkService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultWatsonWorkService.class);
