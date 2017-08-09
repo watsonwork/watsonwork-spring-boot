@@ -2,8 +2,6 @@ package com.ibm.watsonwork.service.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
@@ -19,8 +17,6 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -45,7 +41,7 @@ public class DefaultWatsonWorkService implements WatsonWorkService {
     private WatsonWorkClient watsonWorkClient;
 
     @Override
-    @Async
+    @Async(value = "WebhookThreadPoolExecutor")
     public void createMessage(@NotNull String spaceId, @NotNull Message message) {
         Call<Message> call = watsonWorkClient.createMessage(authService.getAppAuthToken(), spaceId, message);
 
@@ -64,7 +60,7 @@ public class DefaultWatsonWorkService implements WatsonWorkService {
     }
 
     @Override
-    @Async
+    @Async(value = "WebhookThreadPoolExecutor")
     public void shareFile(@NotNull String spaceId, @NotNull File file, String dimensions) {
         MediaType mediaType = MediaType.parse(org.springframework.http.MediaType.IMAGE_JPEG_VALUE);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData(FORM_DATA_FILE, file.getName(), RequestBody.create(mediaType, file));
@@ -86,7 +82,7 @@ public class DefaultWatsonWorkService implements WatsonWorkService {
     @Override
     @SneakyThrows(FileNotFoundException.class)
     @PostConstruct
-    @Async
+    @Async(value = "WebhookThreadPoolExecutor")
     public void uploadAppPhoto() {
         File file = ResourceUtils.getFile("classpath:app-photo.jpg");
 

@@ -17,7 +17,7 @@ public class ApplicationBootstrap {
 	}
 
 
-	@Bean
+	@Bean(name = "WebhookThreadPoolExecutor")
 	public Executor asyncExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(10);
