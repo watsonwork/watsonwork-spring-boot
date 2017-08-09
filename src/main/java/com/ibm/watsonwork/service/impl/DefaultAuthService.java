@@ -14,17 +14,18 @@ import com.ibm.watsonwork.model.WebhookEvent;
 import com.ibm.watsonwork.service.AuthService;
 import com.ibm.watsonwork.client.AuthClient;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import retrofit2.Response;
 
-@org.springframework.stereotype.Service
-
+@Service
+@Slf4j
 public class DefaultAuthService implements AuthService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultAuthService.class);
 
     private String appToken;
     private Date appTokenExpireTime;
@@ -45,7 +46,7 @@ public class DefaultAuthService implements AuthService {
                 appTokenExpireTime = getDate(tokenResponse.getExpiresIn());
                 appToken = tokenResponse.getAccessToken();
             } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
         return WatsonWorkConstants.BEARER + appToken;
