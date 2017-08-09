@@ -22,7 +22,7 @@ public class ApplicationBootstrap {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(10);
 		executor.setQueueCapacity(50);
-		executor.setThreadNamePrefix("WebhookProcess-");
+		executor.setThreadNamePrefix("WebhookEventProcess-");
 		executor.initialize();
 		return executor;
 	}

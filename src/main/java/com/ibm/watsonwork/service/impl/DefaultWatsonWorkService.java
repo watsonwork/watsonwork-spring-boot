@@ -66,7 +66,7 @@ public class DefaultWatsonWorkService implements WatsonWorkService {
     @Override
     @Async
     public void shareFile(@NotNull String spaceId, @NotNull File file, String dimensions) {
-        MediaType mediaType = MediaType.parse(org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE);
+        MediaType mediaType = MediaType.parse(org.springframework.http.MediaType.IMAGE_JPEG_VALUE);
         MultipartBody.Part filePart = MultipartBody.Part.createFormData(FORM_DATA_FILE, file.getName(), RequestBody.create(mediaType, file));
 
         Call<FileShareResponse> fileShareResponseCall = watsonWorkClient.shareFile(authService.getAppAuthToken(), spaceId, filePart, dimensions);
