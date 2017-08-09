@@ -75,12 +75,12 @@ Assuming you have completed steps 1-6 in `Running locally using IntelliJ IDEA`
 2. Install the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli/releases) and then Install the [Bluemix CLI](http://clis.ng.bluemix.net/ui/home.html). On Windows, be sure to add the bluemix cli to your PATH.
 3. Run `bluemix login -a https://api.ng.bluemix.net`, and enter your email and password when prompted
 4. Open terminal in the project root. Run `./gradlew clean build` on linux/mac or `gradlew clean build` on windows.
-5. Run `cf push my-app-name -p build/watsonwork-spring-boot-X.X.X.jar -m 512m` (Tip: Make sure the name you want to use is not taken on Bluemix already, since it must be unique.)
+5. Run `cf push my-app-name -p build/libs/watsonwork-spring-boot-X.X.X.jar -m 512m` (Tip: Make sure the name you want to use is not taken on Bluemix already, since it must be unique.)
 6. When it's finished pushing to bluemix, visit your app's url.
 7. Navigate to your app on [Watson Work Services / Apps](https://developer.watsonwork.ibm.com/apps). Select `Listen to Events`. Edit the webhook configuration with the new publicly available URL from Bluemix. Make sure your callback URL has /webhook path. For example: `https://my-host-name.mybluemix.net/webhook`
 
 
 ## Built With
 
-* [Spring Boot 1.5.2](https://projects.spring.io/spring-boot) - Web Framework
+* [Spring Boot 1.5.6](https://projects.spring.io/spring-boot) - Web Framework
 * [Gradle](https://gradle.org/) - Dependency Management

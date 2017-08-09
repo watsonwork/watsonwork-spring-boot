@@ -99,6 +99,7 @@ public class WatsonWorkController {
     @PostMapping(value = "/webhook", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity webhookCallback(@RequestHeader(X_OUTBOUND_TOKEN) String outboundToken, @RequestBody WebhookEvent webhookEvent) {
         if (VERIFICATION.equalsIgnoreCase(webhookEvent.getType()) && authService.isValidVerificationRequest(webhookEvent, outboundToken)) {
+            log.info("building verification response...");
             return buildVerificationResponse(webhookEvent);
         }
         processWebhook(webhookEvent);
@@ -136,6 +137,7 @@ public class WatsonWorkController {
         String responseBody = String.format("{\"response\": \"%s\"}", webhookEvent.getChallenge());
 
         String verificationHeader = authService.createVerificationHeader(responseBody);
+        log.info("webhook verified...");
         return ResponseEntity.status(HttpStatus.OK)
                 .header(X_OUTBOUND_TOKEN, verificationHeader)
                 .body(responseBody);
