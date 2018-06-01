@@ -5,6 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ibm.watsonwork.client.WatsonWorkClient;
 import com.ibm.watsonwork.client.AuthClient;
 import okhttp3.OkHttpClient;
+import okhttp3.ConnectionSpec;
+import okhttp3.OkHttpClient.Builder;
+
+
+
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +27,12 @@ public class WatsonWorkConfiguration {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Bean
+	@Bean
     public OkHttpClient okHttpClient() {
-        return new OkHttpClient();
+        Builder client = new OkHttpClient.Builder();
+        ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS).allEnabledCipherSuites().build();
+        client.connectionSpecs(Collections.singletonList(spec));
+        return client.build();
     }
 
     @Bean
