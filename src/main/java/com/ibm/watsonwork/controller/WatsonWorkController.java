@@ -47,6 +47,7 @@ import static com.ibm.watsonwork.WatsonWorkConstants.STATE_VALUE;
 import static com.ibm.watsonwork.WatsonWorkConstants.WATSONWORK_AUTH_URI_KEY;
 import static com.ibm.watsonwork.WatsonWorkConstants.X_OUTBOUND_TOKEN;
 import static com.ibm.watsonwork.utils.MessageUtils.buildMessage;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 @Slf4j
@@ -97,8 +98,23 @@ public class WatsonWorkController {
     }
 
     @PostMapping(value = "/webhook", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity webhookCallback(@RequestHeader(X_OUTBOUND_TOKEN) String outboundToken, @RequestBody WebhookEvent webhookEvent) {
-        if (VERIFICATION.equalsIgnoreCase(webhookEvent.getType()) && authService.isValidVerificationRequest(webhookEvent, outboundToken)) {
+    public ResponseEntity webhookCallback(@RequestHeader(X_OUTBOUND_TOKEN) String outboundToken, @RequestBody String webhookEventString) {
+
+		if(!verifyWebHookRequest(webhookEventString, outboundToken)) {
+			log.info("In the WebHook request failed security verifcation:" + webhookEventString);
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();     // return a forbidden status
+		}
+        
+	    ObjectMapper objectMapper = new ObjectMapper();          
+        WebhookEvent webhookEvent;
+        try {
+			webhookEvent = objectMapper.readValue(webhookEventString, WebhookEvent.class);
+		} catch(Exception e) {
+			log.info("Failed to parse webhook event:" + webhookEventString);
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();     // return a bad request status
+		}
+
+        if (VERIFICATION.equalsIgnoreCase(webhookEvent.getType())) {
             log.info("building verification response...");
             return buildVerificationResponse(webhookEvent);
         }
@@ -119,7 +135,7 @@ public class WatsonWorkController {
 
                 // send an echo message
                 watsonWorkService.createMessage(webhookEvent.getSpaceId(), buildMessage("Echo App", webhookEvent.getContent()));
-
+      
                 // upload a sample file/image
                 // Remove the following block of code if you do not want to share a file on every echo message. This is just an example.
                 File file = null;
@@ -129,19 +145,35 @@ public class WatsonWorkController {
                     log.error("File not found.", e);
                 }
                 watsonWorkService.shareFile(webhookEvent.getSpaceId(), file, "256x256");
+      
             }
         }
     }
 
     private ResponseEntity buildVerificationResponse(WebhookEvent webhookEvent) {
         String responseBody = String.format("{\"response\": \"%s\"}", webhookEvent.getChallenge());
-
+        if(webhookEvent.getChallenge() == null)
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+	
         String verificationHeader = authService.createVerificationHeader(responseBody);
         log.info("webhook verified...");
         return ResponseEntity.status(HttpStatus.OK)
                 .header(X_OUTBOUND_TOKEN, verificationHeader)
                 .body(responseBody);
     }
+
+
+    private boolean verifyWebHookRequest(String body, String header) {
+		try {
+			String verification = authService.createVerificationHeader(body);
+			return verification.equals(header);
+		}   catch(Exception e) {
+			log.info("Exception verifying webhook request; likely bad webhook secret key?");
+			return false;
+		}
+    }
+
+
 
     private void populateHtmlTemplate(Map<String, Object> model, HttpServletRequest request) {
         model.put(WATSONWORK_AUTH_URI_KEY, watsonWorkProperties.getOauthApi());

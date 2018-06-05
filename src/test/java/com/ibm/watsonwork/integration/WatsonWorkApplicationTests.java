@@ -13,7 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.hamcrest.core.IsEqual;
 import org.junit.Test;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.http.HttpStatus;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNull;
@@ -41,11 +41,12 @@ public class WatsonWorkApplicationTests extends BaseWatsonWorkApplicationTests {
     }
 
     @Test
-    public void postingInvalidVerificationEventReturns200WithNoBody() throws IOException {
+    public void postingInvalidVerificationEventReturns403WithNoBody() throws IOException {
         VerificationRequest verificationRequest = new VerificationRequest(MessageTypes.VERIFICATION, null);
 
         ResponseEntity<JsonNode> responseEntity = getTestRestTemplate().postForEntity("/webhook", verificationRequest, JsonNode.class);
-        assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+
+        assertTrue(responseEntity.getStatusCode() == HttpStatus.FORBIDDEN);
         assertNull(responseEntity.getBody());
     }
 }
