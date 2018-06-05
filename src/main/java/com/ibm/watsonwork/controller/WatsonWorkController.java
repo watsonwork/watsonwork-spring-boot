@@ -163,8 +163,7 @@ public class WatsonWorkController {
     }
 
 
-    private boolean verifyWebHookRequest(String body, String header)
-    {
+    private boolean verifyWebHookRequest(String body, String header) {
 		try {
 			String verification = authService.createVerificationHeader(body);
 			return verification.equals(header);
