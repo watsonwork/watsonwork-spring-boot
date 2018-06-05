@@ -99,24 +99,19 @@ public class WatsonWorkController {
 
     @PostMapping(value = "/webhook", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity webhookCallback(@RequestHeader(X_OUTBOUND_TOKEN) String outboundToken, @RequestBody String webhookEventString) {
-		//log.info("Raw webHookEvent : \"" + webhookEventString + "\"" );
 
-		if(!verifyWebHookRequest(webhookEventString, outboundToken))
-		{
+		if(!verifyWebHookRequest(webhookEventString, outboundToken)) {
 			log.info("In the WebHook request failed security verifcation:" + webhookEventString);
-	        return ResponseEntity.status(403).build();     // return a forbidden status
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();     // return a forbidden status
 		}
         
 	    ObjectMapper objectMapper = new ObjectMapper();          
         WebhookEvent webhookEvent;
-        try
-		{
+        try {
 			webhookEvent = objectMapper.readValue(webhookEventString, WebhookEvent.class);
-		}
-		catch(Exception e)
-		{
-			log.info("In the WebHook body string not parsed:" + webhookEventString);
-	        return ResponseEntity.status(400).build();     // return a bad request status
+		} catch(Exception e) {
+			log.info("Failed to parse webhook event:" + webhookEventString);
+	        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();     // return a bad request status
 		}
 
         if (VERIFICATION.equalsIgnoreCase(webhookEvent.getType())) {
@@ -170,16 +165,10 @@ public class WatsonWorkController {
 
     private boolean verifyWebHookRequest(String body, String header)
     {
-		try
-		{
+		try {
 			String verification = authService.createVerificationHeader(body);
-			if(verification.equals(header))
-				return true;
-			else
-				return false;
-		}
-		catch(Exception e)
-		{
+			return verification.equals(header);
+		}   catch(Exception e) {
 			log.info("Exception verifying webhook request; likely bad webhook secret key?");
 			return false;
 		}
